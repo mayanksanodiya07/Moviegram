@@ -150,8 +150,9 @@ function NavBar({ children }) {
 function Logo() {
   return (
     <div className="logo">
-      <span role="img">🍿</span>
-      <h1>Moviegram</h1>
+      {/* <span role="img">🍿</span>
+      <h1>Moviegram</h1> */}
+      <img  src={logo} alt="Logo"></img>
     </div>
   );
 }
