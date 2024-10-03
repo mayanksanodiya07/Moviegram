@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/mayanksanodiya07/Moviegram/static/css/main.dcff44b8.css",
+    "main.js": "/mayanksanodiya07/Moviegram/static/js/main.a308acf9.js",
+    "static/js/952.6fdb1054.chunk.js": "/mayanksanodiya07/Moviegram/static/js/952.6fdb1054.chunk.js",
+    "static/media/logo.png": "/mayanksanodiya07/Moviegram/static/media/logo.db75983e400760451cb6.png",
+    "index.html": "/mayanksanodiya07/Moviegram/index.html",
+    "main.dcff44b8.css.map": "/mayanksanodiya07/Moviegram/static/css/main.dcff44b8.css.map",
+    "main.a308acf9.js.map": "/mayanksanodiya07/Moviegram/static/js/main.a308acf9.js.map",
+    "952.6fdb1054.chunk.js.map": "/mayanksanodiya07/Moviegram/static/js/952.6fdb1054.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.dcff44b8.css",
+    "static/js/main.a308acf9.js"
+  ]
+}
