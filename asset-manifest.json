@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/Moviegram/static/css/main.dcff44b8.css",
-    "main.js": "/Moviegram/static/js/main.1e0fed79.js",
+    "main.js": "/Moviegram/static/js/main.c31ac087.js",
     "static/js/952.6fdb1054.chunk.js": "/Moviegram/static/js/952.6fdb1054.chunk.js",
     "static/media/logo.png": "/Moviegram/static/media/logo.db75983e400760451cb6.png",
     "index.html": "/Moviegram/index.html",
     "main.dcff44b8.css.map": "/Moviegram/static/css/main.dcff44b8.css.map",
-    "main.1e0fed79.js.map": "/Moviegram/static/js/main.1e0fed79.js.map",
+    "main.c31ac087.js.map": "/Moviegram/static/js/main.c31ac087.js.map",
     "952.6fdb1054.chunk.js.map": "/Moviegram/static/js/952.6fdb1054.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.dcff44b8.css",
-    "static/js/main.1e0fed79.js"
+    "static/js/main.c31ac087.js"
   ]
 }
