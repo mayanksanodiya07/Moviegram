@@ -26,3 +26,5 @@ root.render(
     <Test/> */}
   </React.StrictMode>
 );
+
+console.log(__dirname);
