@@ -13,7 +13,7 @@ const PORT = 5000;
 connectToMongoDB("mongodb+srv://moviegram:moviegram@cluster0.ro8co.mongodb.net/moviegramdb?retryWrites=true&w=majority&appName=Cluster0");
 
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false })); 
 app.use(
   cors({
     origin: "http://localhost:3000",
