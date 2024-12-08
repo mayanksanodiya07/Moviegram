@@ -16,7 +16,10 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false })); 
 app.use(
   cors({ 
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000", 
+      "https://moviegram-umber.vercel.app", 
+    ],
     methods: ["GET", "POST", "DELETE"],
     credentials: true
   })
