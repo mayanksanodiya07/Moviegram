@@ -22,7 +22,10 @@ app.use(
   })
 );
 app.use(express.json());
-
+app.get("/", (req, res) => {
+  res.json("Hello");
+  console.log("default");
+});
 app.post("/signup", handleSignup);
 app.post("/login", handleLogin);
 app.post("/movies", handleAddMovie);
