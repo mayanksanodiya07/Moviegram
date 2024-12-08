@@ -15,7 +15,7 @@ connectToMongoDB("mongodb+srv://moviegram:moviegram@cluster0.ro8co.mongodb.net/m
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false })); 
 app.use( 
-  cors({
+  cors({ 
     origin: "http://localhost:3000",
     methods: ["GET", "POST", "DELETE"],
     credentials: true
