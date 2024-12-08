@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.loader {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 4.8rem;
+}
+
+.search::placeholder {
+  color: var(--color-text-dark);
+}
+
+/* .seconds {
+  background-color: var(--color-background-100);
+  width: 8rem;
+  border-radius: 10rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.4rem;
+  margin-top: 2.4rem;
+} */
+
+.btn-back {
+ 
+  top: 0.6rem;
+  left: 0.6rem;
+}
