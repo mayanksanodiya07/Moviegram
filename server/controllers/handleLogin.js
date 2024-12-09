@@ -31,11 +31,10 @@ async function handleLogin(req, res) {
       // Set the token as an HTTP-only cookie
       res.cookie("authToken", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         sameSite: "Lax",
         // maxAge: 60 * 60 * 1000,
       });
-  
       res.status(200).json({
         message: "Logged in successfully",
         user: existingUser,
