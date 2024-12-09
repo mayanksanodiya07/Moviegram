@@ -46,7 +46,7 @@ function FacutyLoginPage() {
 
     try {
       const res = await axios.post(
-        "https://moviegram-backend.vercel.app/login",
+        "http://localhost:5000/login",
         {
           email,
           password,

@@ -22,4 +22,4 @@ root.render(
   </React.StrictMode>
 );
 
-console.log(__dirname);
+// console.log(__dirname);
