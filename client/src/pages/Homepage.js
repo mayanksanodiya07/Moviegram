@@ -30,7 +30,7 @@ export default function Homepage() {
     const fetchWatchedMovies = async () => {
       console.log("okko");
       try {
-        const response = await axios.get(`http://localhost:5000/movies`, {
+        const response = await axios.get(`https://moviegram-backend.vercel.app/movies`, {
           params: { id },
         });
         console.log(response.data.movies);
@@ -60,7 +60,7 @@ export default function Homepage() {
 
   async function handleAddWatched(movie) {
     try {
-      const res = await axios.post("http://localhost:5000/movies", {
+      const res = await axios.post("https://moviegram-backend.vercel.app/movies", {
         id,
         movie,
       });
@@ -81,7 +81,7 @@ export default function Homepage() {
     }
     try {
       const res = await axios.delete(
-        `http://localhost:5000/movies/${movieId}`,
+        `https://moviegram-backend.vercel.app/movies/${movieId}`,
         {
           data: { userId: id },
         }
