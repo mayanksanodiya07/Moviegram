@@ -3,7 +3,7 @@ import axios from "axios";
 const checkUserLoggedIn = async (userId) => {
   try {
     const res = await axios.post(
-      "http://localhost:5000/auth/verify",
+      `${process.env.REACT_APP_SERVER_URL}/auth/verify`,
       { userId },
       { withCredentials: true }
     );
