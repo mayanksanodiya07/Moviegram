@@ -3,15 +3,31 @@ import Loading from "./Loading";
 import StarRating from "./StarRating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { getComments } from "../api/comments";
+import CommentsList from "./CommentsList ";
+import { deleteComments } from "../api/comments";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const KEY = "aa5eda26";
-
-function MovieDetails({ selectedId, onCloseMovie, onAddMovie, watched }) {
+function MovieDetails({
+  selectedId,
+  onCloseMovie,
+  onAddMovie,
+  watched,
+  onAddComment,
+}) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
-  const countRef = useRef(0);
+  const [comment, setComment] = useState("");
+  const [commentData, setCommentData] = useState({});
 
+  const navigate = useNavigate();
+
+  const countRef = useRef(0);
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const id = searchParams.get("id");
   useEffect(
     function () {
       if (userRating) countRef.current++;
@@ -37,20 +53,46 @@ function MovieDetails({ selectedId, onCloseMovie, onAddMovie, watched }) {
     Genre: genre,
   } = movie;
 
+  const handleAddComment = async (comment) => {
+    if (!id) {
+      navigate("/login");
+      return;
+    }
+
+  if(comment.trim() === "") return;
+
+    const { commentData, message } = await onAddComment(comment, selectedId);
+    if (!commentData) {
+      console.error("Failed to add comment:", message);
+      return;
+    }
+
+    setCommentData(commentData);
+  };
+
   function handleAdd() {
-    const newWatchedMovie = {
-      imdbID: selectedId,
-      title,
-      year,
-      poster,
-      imdbRating: Number(imdbRating),
-      runtime: Number(runtime.split(" ").at(0)),
-      userRating,
-      countRatingDecisions: countRef.current,
-    };
-    
-    onAddMovie(newWatchedMovie);
-    onCloseMovie();
+    if (!id) {
+      navigate("/login");
+      return;
+    }
+    try {
+      const newWatchedMovie = {
+        imdbID: selectedId,
+        title,
+        year,
+        poster,
+        imdbRating: Number(imdbRating),
+        runtime: Number(runtime.split(" ").at(0)),
+        userRating,
+        countRatingDecisions: countRef.current,
+      };
+
+      onAddMovie(newWatchedMovie);
+      handleAddComment(comment);
+      onCloseMovie();
+    } catch (err) {
+      console.log("error: ", err);
+    }
   }
 
   useEffect(
@@ -74,12 +116,16 @@ function MovieDetails({ selectedId, onCloseMovie, onAddMovie, watched }) {
     function () {
       async function getMovieDetails() {
         setIsLoading(true);
+        // console.log(process.env.REACT_APP_OMDB_KEY)
         const res = await fetch(
-          `https://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
+          `https://www.omdbapi.com/?apikey=${process.env.REACT_APP_OMDB_KEY}&i=${selectedId}`
         );
 
         const data = await res.json();
-        setMovie((datas) => data);
+
+        const { commentData } = await getComments(selectedId);
+        setMovie(data);
+        setCommentData(commentData);
         setIsLoading(false);
       }
       getMovieDetails();
@@ -105,9 +151,9 @@ function MovieDetails({ selectedId, onCloseMovie, onAddMovie, watched }) {
         <Loading />
       ) : (
         <>
-          <header className="flex text-sm ">
+          <header className="flex text-sm relative">
             <button
-              className="btn-back absolute h-7 w-7 text-base bg-white text-color-background-500 rounded-full flex items-center justify-center shadow-3xl"
+              className="btn-back fixed ml-2 mt-2 h-7 w-7 text-base bg-white text-color-background-500 rounded-full flex items-center justify-center shadow-3xl"
               onClick={onCloseMovie}
             >
               <FontAwesomeIcon icon={faArrowLeft} className="" />
@@ -118,12 +164,12 @@ function MovieDetails({ selectedId, onCloseMovie, onAddMovie, watched }) {
               className="w-1/3"
             />
             <div className="flex flex-col bg-color-background-100 w-full px-8 py-6 gap-3">
-              <h2 className="mb-1 text-2xl">{title}</h2>
-              <p>
+              <h2 className="mb-1 text-2xl font-semibold">{title}</h2>
+              <p className="m-0">
                 {released} &bull; {runtime}
               </p>
-              <p>{genre}</p>
-              <p className="flex items-center gap-2">
+              <p className="m-0">{genre}</p>
+              <p className="flex items-center gap-2 m-0">
                 <span>⭐️</span>
                 {imdbRating} IMDb rating
               </p>
@@ -131,7 +177,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddMovie, watched }) {
           </header>
 
           <section className="flex flex-col p-10 gap-6">
-            <div className="rating bg-color-background-100 rounded-xl px-6 py-5 mb-2 font-semibold flex flex-col gap-5 ">
+            <div className="rating bg-color-background-100 rounded-xl px-6 py-4 mb-2 font-semibold flex flex-col gap-4 ">
               {!isWatched ? (
                 <>
                   <StarRating
@@ -140,26 +186,43 @@ function MovieDetails({ selectedId, onCloseMovie, onAddMovie, watched }) {
                     onSetRating={setUserRating}
                   />
                   {userRating && (
-                    <button
-                      className="bg-color-primary text-color-text p-2 font-bold rounded-full cursor-pointer hover:bg-color-primary-light"
-                      onClick={handleAdd}
-                    >
-                      <FontAwesomeIcon icon={faPlus} /> Add to list
-                    </button>
+                    <>
+                      <textarea
+                        type="textarea"
+                        id="comment"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="Add a comment..."
+                        className="rounded-xl resize-none overflow-scroll px-3 py-2 bg-color-background-500 placeholder:text-color-text-dark text-color-text scrollbar-thin scrollbar-thumb-color-background-100 scrollbar-track-color-background-500 scrollbar-thumb-rounded-full scrollbar-thumb-rounded-full"
+                      />
+                      <button
+                        className="bg-color-primary text-color-text p-2 font-bold rounded-full cursor-pointer hover:bg-color-primary-light"
+                        onClick={handleAdd}
+                      >
+                        <FontAwesomeIcon icon={faPlus} /> Add to list
+                      </button>
+                    </>
                   )}
                 </>
               ) : (
-                <p className="text-sm">
+                <p className="text-sm m-0">
                   You rated with movie {watchedUserRating} <span>⭐️</span>
                 </p>
               )}
             </div>
-            <p className="text-sm">
+            <p className="text-sm m-0">
               <em>{plot}</em>
             </p>
-            <p className="text-sm">Starring {actors}</p>
-            <p className="text-sm">Directed by {director}</p>
+            <p className="text-sm m-0">Starring {actors}</p>
+            <p className="text-sm m-0">Directed by {director}</p>
           </section>
+          <footer>
+            <CommentsList
+              commentData={commentData}
+              onSetCommentData={setCommentData}
+              onAddComment={handleAddComment}
+            />
+          </footer>
         </>
       )}
     </div>

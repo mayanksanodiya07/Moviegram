@@ -18,7 +18,7 @@ function SignupPage() {
     if (password === confirmPassword) {
       setLoading(true);
       try {
-        const res = await axios.post("https://moviegram-backend.vercel.app/signup", {
+        const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/signup`, {
           email,
           password,
         });

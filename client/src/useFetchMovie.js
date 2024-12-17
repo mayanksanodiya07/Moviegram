@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-const KEY = "aa5eda26";
 
 export function useFetchMovie(query) {
   const [movies, setMovies] = useState([]);
@@ -17,7 +16,7 @@ export function useFetchMovie(query) {
           setError("");
 
           const res = await fetch(
-            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            `https://www.omdbapi.com/?apikey=${process.env.REACT_APP_OMDB_KEY}&s=${query}`,
             { signal: controller.signal }
           );
           if (!res.ok) {

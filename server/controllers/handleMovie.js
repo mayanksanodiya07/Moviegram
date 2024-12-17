@@ -1,8 +1,8 @@
-const bcrypt = require("bcrypt");
 const User = require("../models/user");
 
 async function handleAddMovie(req, res) {
   const { id, movie } = req.body;
+  
   try {
     const user = await User.findOne({ _id: id });
 
@@ -48,7 +48,6 @@ async function handleDeleteMovie(req, res) {
 
   try {
     const user = await User.findById(userId);
-    console.log(userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });

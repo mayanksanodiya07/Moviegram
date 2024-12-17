@@ -6,10 +6,12 @@ import MovieDetails from "../components/MovieDetails";
 import Box from "../components/Box";
 import Loading from "../components/Loading";
 import logo from "../logo/logo.png";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import checkUserLoggedIn from "../services/checkUserLoggedIn";
+import RandomColors from "../components/RandomColor";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -19,6 +21,7 @@ export default function Homepage() {
   const [selectedId, setSelectedId] = useState(null);
   const { movies, isLoading, error } = useFetchMovie(query);
 
+  const navigate = useNavigate();
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
@@ -28,17 +31,22 @@ export default function Homepage() {
 
   useEffect(() => {
     const fetchWatchedMovies = async () => {
-      console.log("okko");
+      if (!id) return;
       try {
-        const response = await axios.get(`https://moviegram-backend.vercel.app/movies`, {
-          params: { id },
-        });
-        console.log(response.data.movies);
+        const isLoggedIn = await checkUserLoggedIn(id);
+        if (!isLoggedIn) {
+          navigate("/login");
+        }
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/movies`,
+          {
+            params: { id },
+          }
+        );
         setWatched(response.data.movies);
       } catch (error) {
         if (error.response) {
-          // setMessage(error.response.data.message);
-          console.log(error.response.data.message);
+          console.log("error: ", error.response.data.message);
         } else {
           // setMessage('An error occurred during verification.');
           console.log("An error occurred during verification.");
@@ -59,15 +67,39 @@ export default function Homepage() {
   }
 
   async function handleAddWatched(movie) {
-    try {
-      const res = await axios.post("https://moviegram-backend.vercel.app/movies", {
-        id,
-        movie,
-      });
 
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/movies`,
+        {
+          id,
+          movie,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       setWatched(res.data.movies);
     } catch (err) {
       console.error("error", err?.response?.data);
+    }
+  }
+
+  async function handleAddComment(comment, selectedId) {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/comment`,
+        {
+          userId: id,
+          comment,
+          movieId: selectedId,
+        }
+      );
+
+      return res.data;
+    } catch (err) {
+      console.error("error", err?.response?.data);
+      return { commentData: null, message: "Failed to add comment" };
     }
   }
 
@@ -81,7 +113,7 @@ export default function Homepage() {
     }
     try {
       const res = await axios.delete(
-        `https://moviegram-backend.vercel.app/movies/${movieId}`,
+        `${process.env.REACT_APP_SERVER_URL}/movies/${movieId}`,
         {
           data: { userId: id },
         }
@@ -94,8 +126,10 @@ export default function Homepage() {
       );
     }
   };
+
   return (
     <div className="h-screen p-6 text-color-text bg-color-background-900">
+      {/* <RandomColors/> */}
       <NavBar>
         <SearchBar query={query} onSetQuery={setQuery} />
         <NumResult movies={movies} />
@@ -117,6 +151,7 @@ export default function Homepage() {
               selectedId={selectedId}
               onCloseMovie={handleCloseMovie}
               onAddMovie={handleAddWatched}
+              onAddComment={handleAddComment}
               watched={watched}
             />
           ) : (
@@ -279,7 +314,7 @@ function WatchedMovie({ movie, onDeleteMovie }) {
           className="btn-delete absolute right-7 border-0 rounded-full text-color-red hover:text-color-red-dark cursor-pointer text-base font-bold flex items-center justify-center"
           onClick={onDeleteMovie}
         >
-          <FontAwesomeIcon icon={faTrash} />
+          <FontAwesomeIcon icon={faTrashCan} />
         </button>
       </div>
     </li>
