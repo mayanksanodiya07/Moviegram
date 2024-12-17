@@ -27,11 +27,17 @@ async function handleLogin(req, res) {
       const token = jwt.sign({ userId: existingUser._id }, secretkey);
   
       // Set the token as an HTTP-only cookie
+      // res.cookie("authToken", token, {
+      //   httpOnly: true,
+      //   secure: false,
+      //   sameSite: "Lax",
+      //   // maxAge: 60 * 60 * 1000,
+      // });
+
       res.cookie("authToken", token, {
         httpOnly: true,
-        secure: false,
-        sameSite: "Lax",
-        maxAge: 60 * 60 * 1000,
+        secure: true, 
+        sameSite: "None", 
       });
       res.status(200).json({
         message: "Logged in successfully",
