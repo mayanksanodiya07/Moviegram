@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import checkUserLoggedIn from "../services/checkUserLoggedIn";
-import RandomColors from "../components/RandomColor";
+// import RandomColors from "../components/RandomColor";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
